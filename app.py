@@ -1,7 +1,7 @@
 import gradio as gr
 from transformers import pipeline
 
-chatbot = pipeline("text2text-generation", model="facebook/blenderbot-400M-distill")
+chatbot = pipeline("text-generation", model="facebook/blenderbot-400M-distill")
 
 def chatbot_response(message, history):
     result = chatbot(
