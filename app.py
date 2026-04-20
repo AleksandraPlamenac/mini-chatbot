@@ -2,7 +2,7 @@ import gradio as gr
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-MODEL_NAME = "microsoft/DialoGPT-medium"
+MODEL_NAME = "microsoft/DialoGPT-small"
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
@@ -59,12 +59,11 @@ demo = gr.ChatInterface(
     title="Mini Chatbot",
     description="Enter text to start chatting.",
     examples=[
-        "Hello!", 
-        "Can I ask you a question?",
-        "Tell me a short joke",
-        "Give me a fun fact about animals",
-        "Explain what a computer is in one sentence",
-        "What is the purpose of the internet?"
+        "Tell me a short joke.",
+        "Give me a fun fact about animals.",
+        "Explain what a computer is in one sentence.",
+        "What is the purpose of the internet?",
+        "Describe what a robot does."
     ]
 )
 
