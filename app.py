@@ -8,22 +8,14 @@ model = BlenderbotForConditionalGeneration.from_pretrained(MODEL_NAME)
 
 
 def build_prompt(message, history):
-    parts = []
+    prompt = ""
 
-    # Keep only recent messages to avoid long/slow prompts
-    for item in history[-6:]:
-        role = item.get("role", "")
-        content = item.get("content", "")
+    # history is list of tuples: (user, bot)
+    for user_msg, bot_msg in history[-3:]:
+        prompt += f"User: {user_msg}\nBot: {bot_msg}\n"
 
-        if role == "user":
-            parts.append(f"User: {content}")
-        elif role == "assistant":
-            parts.append(f"Bot: {content}")
-
-    parts.append(f"User: {message}")
-    parts.append("Bot:")
-
-    return "\n".join(parts)
+    prompt += f"User: {message}\nBot:"
+    return prompt
 
 
 def chatbot_response(message, history):
@@ -38,9 +30,9 @@ def chatbot_response(message, history):
         temperature=0.7
     )
 
-    reply = tokenizer.decode(reply_ids[0], skip_special_tokens=True).strip()
+    reply = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
 
-    # Remove prompt echo if BlenderBot repeats it
+    # Clean output
     if "Bot:" in reply:
         reply = reply.split("Bot:")[-1].strip()
 
@@ -50,9 +42,9 @@ def chatbot_response(message, history):
 demo = gr.ChatInterface(
     fn=chatbot_response,
     title="Mini Chatbot",
-    description="Enter text to start chatting.",
-    type="messages"
+    description="Enter text to start chatting."
 )
+
 
 if __name__ == "__main__":
     demo.launch()
