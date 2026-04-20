@@ -1,5 +1,5 @@
-from transformers import pipeline, Conversation
 import gradio as gr
+from transformers import pipeline, Conversation
 
 chatbot = pipeline("conversational", model="facebook/blenderbot-400M-distill")
 
@@ -20,7 +20,6 @@ def chatbot_response(message, history):
     response_list.append(reply)
 
     return reply
-
 
 demo = gr.ChatInterface(
     fn=chatbot_response,
