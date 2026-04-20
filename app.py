@@ -13,9 +13,6 @@ model.eval()
 
 
 def build_prompt_from_history(message, history, max_turns=2):
-    """
-    Build a DialoGPT prompt from recent chat history.
-    """
     dialogue = []
     recent_history = history[-max_turns:] if history else []
 
@@ -39,11 +36,11 @@ def respond(message, history):
     with torch.no_grad():
         output_ids = model.generate(
             input_ids,
-            max_new_tokens=40,
+            max_new_tokens=25,
             pad_token_id=tokenizer.eos_token_id,
             do_sample=True,
-            top_k=30,
-            top_p=0.9,
+            top_k=20,
+            top_p=0.85,
             temperature=0.7,
             repetition_penalty=1.1
         )
@@ -57,20 +54,19 @@ def respond(message, history):
     return response
 
 
-with gr.Blocks() as demo:
-    gr.Markdown("# Mini Chatbot")
-    gr.Markdown("A conversational chatbot using DialoGPT-medium.")
-
-    gr.ChatInterface(
-        fn=respond,
-        examples=[
-            "Tell me an interesting fact about space.",
-            "Can you explain how the stock market works?",
-            "What is a surprising fact most people don’t know?",
-            "Explain how artificial intelligence works in simple terms.",
-            "What is a current trend in technology?"
-        ]
-    )
+demo = gr.ChatInterface(
+    fn=respond,
+    title="Mini Chatbot",
+    description="Enter text to start chatting.",
+    examples=[
+        "Hello!" 
+        "Can I ask you a question?"
+        "Tell me a short joke",
+        "Give me a fun fact about animals",
+        "Explain what a computer is in one sentence",
+        "What is the purpose of the internet?"
+    ]
+)
 
 if __name__ == "__main__":
     demo.launch()
