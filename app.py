@@ -1,28 +1,28 @@
 import gradio as gr
-from transformers import pipeline
+from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
 
-chatbot = pipeline("text-generation", model="facebook/blenderbot-400M-distill")
+MODEL_NAME = "facebook/blenderbot-400M-distill"
+
+tokenizer = BlenderbotTokenizer.from_pretrained(MODEL_NAME)
+model = BlenderbotForConditionalGeneration.from_pretrained(MODEL_NAME)
 
 def chatbot_response(message, history):
-    result = chatbot(
-        message,
+    inputs = tokenizer([message], return_tensors="pt")
+
+    reply_ids = model.generate(
+        **inputs,
         max_new_tokens=40,
         do_sample=True,
         temperature=0.7
     )
-    return result[0]["generated_text"]
+
+    reply = tokenizer.batch_decode(reply_ids, skip_special_tokens=True)[0]
+    return reply
 
 demo = gr.ChatInterface(
     fn=chatbot_response,
     title="Mini Chatbot",
-    description="Enter text to start chatting.",
-    examples=[
-        "Hello",
-        "Tell me a joke",
-        "What can you do?",
-        "Can you help me?",
-        "What is a chatbot?"
-    ]
+    description="Enter text to start chatting."
 )
 
 if __name__ == "__main__":
