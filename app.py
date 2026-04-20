@@ -13,10 +13,6 @@ model.eval()
 
 
 def build_prompt_from_history(message, history, max_turns=3):
-    """
-    Building a DialoGPT prompt from recent chat history.
-    Only the last few turns are used for keeping generation efficient.
-    """
     dialogue = []
     recent_history = history[-max_turns:] if history else []
 
@@ -53,24 +49,27 @@ def respond(message, history):
     response = tokenizer.decode(response_ids[0], skip_special_tokens=True).strip()
 
     if not response:
-        response = "I am not sure what to answer. Please try asking something else."
+        response = "I'm not sure what to say yet. Try asking something else."
 
     return response
 
 
-demo = gr.ChatInterface(
-    fn=respond,
-    title="Mini Chatbot",
-    description="A simple conversational chatbot built with DialoGPT-medium, Transformers, Gradio, and Hugging Face Spaces.",
-    examples=[
-        "Hello!",
-        "What can you do?",
-        "Tell me a fun fact about NLP.",
-        "Explain chatbots in simple terms."
-    ],
-    theme=gr.themes.Soft(),
-    save_history=True
-)
+with gr.Blocks(theme=gr.themes.Soft()) as demo:
+    gr.Markdown("# 🤖 NLP Buddy Chatbot")
+    gr.Markdown(
+        "A simple conversational chatbot built with DialoGPT-medium, "
+        "Transformers, Gradio, and Hugging Face Spaces."
+    )
+
+    gr.ChatInterface(
+        fn=respond,
+        examples=[
+            "Hello!",
+            "What can you do?",
+            "Tell me a fun fact about NLP.",
+            "Explain chatbots in simple terms."
+        ]
+    )
 
 if __name__ == "__main__":
     demo.launch()
