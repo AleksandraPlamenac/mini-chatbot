@@ -1,38 +1,29 @@
-import gradio as gr
 from transformers import pipeline, Conversation
+import gradio as gr
 
-chatbot = pipeline("conversational", model="facebook/blenderbot-400M-distill")
+chatbot = pipeline(model="facebook/blenderbot-400M-distill")
 
 message_list = []
 response_list = []
 
-def chatbot_response(message, history):
+def vanilla_chatbot(message, history):
     conversation = Conversation(
         text=message,
         past_user_inputs=message_list,
         generated_responses=response_list
     )
-
     conversation = chatbot(conversation)
-    reply = conversation.generated_responses[-1]
 
+    reply = conversation.generated_responses[-1]
     message_list.append(message)
     response_list.append(reply)
 
     return reply
 
-demo = gr.ChatInterface(
-    fn=chatbot_response,
-    title="Mini Chatbot",
-    description="Enter text to start chatting.",
-    examples=[
-        "Hello",
-        "Tell me a joke",
-        "What can you do?",
-        "Can you help me?",
-        "What is a chatbot?"
-    ]
+demo_chatbot = gr.ChatInterface(
+    vanilla_chatbot,
+    title="Vanilla Chatbot",
+    description="Enter text to start chatting."
 )
 
-if __name__ == "__main__":
-    demo.launch()
+demo_chatbot.launch()
