@@ -7,21 +7,8 @@ tokenizer = BlenderbotTokenizer.from_pretrained(MODEL_NAME)
 model = BlenderbotForConditionalGeneration.from_pretrained(MODEL_NAME)
 
 
-def build_prompt(message, history):
-    prompt = ""
-
-    # history is list of tuples: (user, bot)
-    for user_msg, bot_msg in history[-3:]:
-        prompt += f"User: {user_msg}\nBot: {bot_msg}\n"
-
-    prompt += f"User: {message}\nBot:"
-    return prompt
-
-
 def chatbot_response(message, history):
-    prompt = build_prompt(message, history)
-
-    inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
+    inputs = tokenizer(message, return_tensors="pt")
 
     reply_ids = model.generate(
         **inputs,
@@ -31,11 +18,6 @@ def chatbot_response(message, history):
     )
 
     reply = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
-
-    # Clean output
-    if "Bot:" in reply:
-        reply = reply.split("Bot:")[-1].strip()
-
     return reply
 
 
@@ -44,7 +26,6 @@ demo = gr.ChatInterface(
     title="Mini Chatbot",
     description="Enter text to start chatting."
 )
-
 
 if __name__ == "__main__":
     demo.launch()
