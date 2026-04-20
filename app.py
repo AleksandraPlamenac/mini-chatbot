@@ -1,29 +1,29 @@
-from transformers import pipeline, Conversation
 import gradio as gr
+from transformers import pipeline
 
-chatbot = pipeline(model="facebook/blenderbot-400M-distill")
+chatbot = pipeline("text2text-generation", model="facebook/blenderbot-400M-distill")
 
-message_list = []
-response_list = []
-
-def vanilla_chatbot(message, history):
-    conversation = Conversation(
-        text=message,
-        past_user_inputs=message_list,
-        generated_responses=response_list
+def chatbot_response(message, history):
+    result = chatbot(
+        message,
+        max_new_tokens=40,
+        do_sample=True,
+        temperature=0.7
     )
-    conversation = chatbot(conversation)
+    return result[0]["generated_text"]
 
-    reply = conversation.generated_responses[-1]
-    message_list.append(message)
-    response_list.append(reply)
-
-    return reply
-
-demo_chatbot = gr.ChatInterface(
-    vanilla_chatbot,
-    title="Vanilla Chatbot",
-    description="Enter text to start chatting."
+demo = gr.ChatInterface(
+    fn=chatbot_response,
+    title="Mini Chatbot",
+    description="Enter text to start chatting.",
+    examples=[
+        "Hello",
+        "Tell me a joke",
+        "What can you do?",
+        "Can you help me?",
+        "What is a chatbot?"
+    ]
 )
 
-demo_chatbot.launch()
+if __name__ == "__main__":
+    demo.launch()
