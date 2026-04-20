@@ -12,7 +12,7 @@ model.to(device)
 model.eval()
 
 
-def build_prompt_from_history(message, history, max_turns=3):
+def build_prompt_from_history(message, history, max_turns=2):
     dialogue = []
     recent_history = history[-max_turns:] if history else []
 
@@ -36,13 +36,13 @@ def respond(message, history):
     with torch.no_grad():
         output_ids = model.generate(
             input_ids,
-            max_new_tokens=100,
+            max_new_tokens=40,
             pad_token_id=tokenizer.eos_token_id,
             do_sample=True,
-            top_k=50,
-            top_p=0.95,
-            temperature=0.75,
-            repetition_penalty=1.2
+            top_k=30,
+            top_p=0.9,
+            temperature=0.7,
+            repetition_penalty=1.1
         )
 
     response_ids = output_ids[:, input_ids.shape[-1]:]
