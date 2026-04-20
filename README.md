@@ -80,7 +80,7 @@ To ensure a stable and responsive chatbot, the final version processes each mess
 ---
 
 ## Live Demo
-👉 https://huggingface.co/spaces/aleksapl/mini-chatbot
+https://huggingface.co/spaces/aleksapl/mini-chatbot
 
 ---
 
