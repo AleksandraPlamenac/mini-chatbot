@@ -59,8 +59,8 @@ demo = gr.ChatInterface(
     title="Mini Chatbot",
     description="Enter text to start chatting.",
     examples=[
-        "Hello!" 
-        "Can I ask you a question?"
+        "Hello!", 
+        "Can I ask you a question?",
         "Tell me a short joke",
         "Give me a fun fact about animals",
         "Explain what a computer is in one sentence",
