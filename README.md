@@ -12,7 +12,7 @@ short_description: Mini chatbot using BlenderBot and Hugging Face Transformers
 ---
 
 ## Overview
-This project is a simple conversational chatbot built using a pretrained Hugging Face transformer model. It allows users to interact with the model through a clean web interface without any fine-tuning or backend setup.
+This project is a simple conversational chatbot built using a pretrained Hugging Face transformer model. It allows users to interact with the model through a web interface without any fine-tuning or backend setup.
 
 The chatbot is deployed using Gradio on Hugging Face Spaces.
 
@@ -64,18 +64,33 @@ BlenderBot is a conversational model developed by Facebook AI that is designed f
 
 ---
 
+## Model Selection & Performance Comparison
+
+The assignment initially specified the use of `microsoft/DialoGPT-medium`. However, during testing, several performance limitations were observed:
+
+- **DialoGPT-medium**
+  - Response time: ~20–30 seconds per message
+  - Too slow for an interactive chatbot experience on CPU (Hugging Face free tier)
+
+- **DialoGPT-small**
+  - Response time: ~10–20 seconds
+  - Faster, but responses were often low-quality or the model failed to properly answer user questions
+
+- **blenderbot-400M-distill (final choice)**
+  - Response time: ~5–10 seconds
+  - Significantly better response quality
+  - More suitable for real-time interaction
+
+Based on this comparison, BlenderBot was selected as the final model because it provides the best balance between response speed and answer quality in the given deployment environment.
+
+This decision aligns with the optional improvements section of the assignment, which allows the use of alternative pretrained models.
+
+---
+
 ## Notes on Conversation Memory
 Conversation memory was tested as an optional improvement. However, due to limitations of the BlenderBot model in this environment (CPU-based Hugging Face Spaces), multi-turn conversation history caused instability and runtime errors.
 
 To ensure a stable and responsive chatbot, the final version processes each message independently without maintaining long conversation history.
-
----
-
-## Future Improvements
-- implement stable conversation memory using a different model (e.g., DialoGPT)  
-- enhance UI design and styling  
-- experiment with larger or more advanced conversational models  
-- add user controls for response length and creativity  
 
 ---
 
@@ -84,5 +99,5 @@ https://huggingface.co/spaces/aleksapl/mini-chatbot
 
 ---
 
-Check out the configuration reference:  
+Configuration reference:  
 https://huggingface.co/docs/hub/spaces-config-reference
